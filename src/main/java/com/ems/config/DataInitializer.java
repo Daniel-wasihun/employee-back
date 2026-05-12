@@ -31,101 +31,116 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        if (userRepository.count() == 0) {
-            log.info("Initializing sample data...");
+        try {
+            log.info("Checking if sample data needs to be initialized...");
+            long userCount = userRepository.count();
+            log.debug("Current user count: {}", userCount);
 
-            // Seed Admin User
-            User admin = User.builder()
-                    .email("admin@ems.com")
-                    .password(passwordEncoder.encode("admin123"))
-                    .role(Role.ADMIN)
-                    .isActive(true)
-                    .build();
-            admin = userRepository.save(admin);
+            if (userCount == 0) {
+                log.info("No users found. Initializing sample data for first run...");
 
-            // Seed Manager User
-            User manager = User.builder()
-                    .email("manager@ems.com")
-                    .password(passwordEncoder.encode("manager123"))
-                    .role(Role.MANAGER)
-                    .isActive(true)
-                    .build();
-            manager = userRepository.save(manager);
+                // Seed Admin User
+                log.debug("Seeding admin user...");
+                User admin = User.builder()
+                        .email("admin@ems.com")
+                        .password(passwordEncoder.encode("admin123"))
+                        .role(Role.ADMIN)
+                        .isActive(true)
+                        .build();
+                admin = userRepository.save(admin);
 
-            // Seed Departments
-            Department engineering = Department.builder()
-                    .name("Engineering")
-                    .description("Software and Infrastructure development")
-                    .build();
-            Department hr = Department.builder()
-                    .name("Human Resources")
-                    .description("Recruitment and employee relations")
-                    .build();
-            Department marketing = Department.builder()
-                    .name("Marketing")
-                    .description("Sales and branding")
-                    .build();
-            Department finance = Department.builder()
-                    .name("Finance")
-                    .description("Accounting and financial planning")
-                    .build();
+                // Seed Manager User
+                log.debug("Seeding manager user...");
+                User manager = User.builder()
+                        .email("manager@ems.com")
+                        .password(passwordEncoder.encode("manager123"))
+                        .role(Role.MANAGER)
+                        .isActive(true)
+                        .build();
+                manager = userRepository.save(manager);
 
-            departmentRepository.saveAll(List.of(engineering, hr, marketing, finance));
+                // Seed Departments
+                log.debug("Seeding departments...");
+                Department engineering = Department.builder()
+                        .name("Engineering")
+                        .description("Software and Infrastructure development")
+                        .build();
+                Department hr = Department.builder()
+                        .name("Human Resources")
+                        .description("Recruitment and employee relations")
+                        .build();
+                Department marketing = Department.builder()
+                        .name("Marketing")
+                        .description("Sales and branding")
+                        .build();
+                Department finance = Department.builder()
+                        .name("Finance")
+                        .description("Accounting and financial planning")
+                        .build();
 
-            // Seed Employees
-            Employee emp1 = Employee.builder()
-                    .userId(admin.getId()) // Link to Admin User
-                    .firstName("Daniel")
-                    .lastName("Wasihun")
-                    .email("admin@ems.com")
-                    .phone("0911223344")
-                    .departmentId(engineering.getId())
-                    .position("Lead Developer")
-                    .salary(new BigDecimal("150000.00"))
-                    .hireDate(LocalDate.of(2023, 1, 15))
-                    .status("ACTIVE")
-                    .build();
+                departmentRepository.saveAll(List.of(engineering, hr, marketing, finance));
 
-            Employee emp2 = Employee.builder()
-                    .userId(manager.getId()) // Link to Manager User
-                    .firstName("Sarah")
-                    .lastName("Johnson")
-                    .email("manager@ems.com")
-                    .phone("0922334455")
-                    .departmentId(hr.getId())
-                    .position("HR Manager")
-                    .salary(new BigDecimal("120000.00"))
-                    .hireDate(LocalDate.of(2023, 3, 10))
-                    .status("ACTIVE")
-                    .build();
+                // Seed Employees
+                log.debug("Seeding employees...");
+                Employee emp1 = Employee.builder()
+                        .userId(admin.getId())
+                        .firstName("Daniel")
+                        .lastName("Wasihun")
+                        .email("admin@ems.com")
+                        .phone("0911223344")
+                        .departmentId(engineering.getId())
+                        .position("Lead Developer")
+                        .salary(new BigDecimal("150000.00"))
+                        .hireDate(LocalDate.of(2023, 1, 15))
+                        .status("ACTIVE")
+                        .build();
 
-            Employee emp3 = Employee.builder()
-                    .firstName("Michael")
-                    .lastName("Smith")
-                    .email("michael.s@ems.com")
-                    .phone("0933445566")
-                    .departmentId(engineering.getId())
-                    .position("Backend Developer")
-                    .salary(new BigDecimal("135000.00"))
-                    .hireDate(LocalDate.of(2023, 6, 22))
-                    .status("ACTIVE")
-                    .build();
-            
-            Employee emp4 = Employee.builder()
-                    .firstName("Emma")
-                    .lastName("Davis")
-                    .email("emma.d@ems.com")
-                    .phone("0944556677")
-                    .departmentId(marketing.getId())
-                    .position("Marketing Specialist")
-                    .salary(new BigDecimal("95000.00"))
-                    .hireDate(LocalDate.of(2023, 8, 5))
-                    .status("ACTIVE")
-                    .build();
+                Employee emp2 = Employee.builder()
+                        .userId(manager.getId())
+                        .firstName("Sarah")
+                        .lastName("Johnson")
+                        .email("manager@ems.com")
+                        .phone("0922334455")
+                        .departmentId(hr.getId())
+                        .position("HR Manager")
+                        .salary(new BigDecimal("120000.00"))
+                        .hireDate(LocalDate.of(2023, 3, 10))
+                        .status("ACTIVE")
+                        .build();
 
-            employeeRepository.saveAll(List.of(emp1, emp2, emp3, emp4));
+                Employee emp3 = Employee.builder()
+                        .firstName("Michael")
+                        .lastName("Smith")
+                        .email("michael.s@ems.com")
+                        .phone("0933445566")
+                        .departmentId(engineering.getId())
+                        .position("Backend Developer")
+                        .salary(new BigDecimal("135000.00"))
+                        .hireDate(LocalDate.of(2023, 6, 22))
+                        .status("ACTIVE")
+                        .build();
+                
+                Employee emp4 = Employee.builder()
+                        .firstName("Emma")
+                        .lastName("Davis")
+                        .email("emma.d@ems.com")
+                        .phone("0944556677")
+                        .departmentId(marketing.getId())
+                        .position("Marketing Specialist")
+                        .salary(new BigDecimal("95000.00"))
+                        .hireDate(LocalDate.of(2023, 8, 5))
+                        .status("ACTIVE")
+                        .build();
 
-            log.info("Sample data initialization completed successfully.");
+                employeeRepository.saveAll(List.of(emp1, emp2, emp3, emp4));
+
+                log.info("Sample data initialization completed successfully.");
+            } else {
+                log.info("Data already present. Skipping initialization.");
+            }
+        } catch (Exception e) {
+            log.error("CRITICAL ERROR during data initialization: {}", e.getMessage(), e);
+            // We don't rethrow here so the app can at least try to start even if seed fails
         }
     }
 }
