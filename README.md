@@ -41,7 +41,7 @@ git clone https://github.com/Daniel-wasihun/employee-back.git
 cd employee-back
 
 # 2. Run with Docker Compose
-docker compose up --build
+docker-compose up --build
 ```
 The backend will be available at `https://localhost:8443`.
 
