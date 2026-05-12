@@ -13,6 +13,5 @@ RUN ./mvnw package -DskipTests -B
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-# Force the keystore path via JVM arguments
-EXPOSE 8443
-ENTRYPOINT ["java", "-Dserver.ssl.key-store=/app/keystore.p12", "-Dserver.ssl.key-store-password=changeit", "-Dserver.ssl.key-alias=ems-backend", "-Dserver.ssl.key-store-type=PKCS12", "-jar", "app.jar"]
+# The port will be determined by the PORT environment variable (default 8080)
+ENTRYPOINT ["java", "-jar", "app.jar"]
