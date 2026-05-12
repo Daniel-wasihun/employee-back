@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ems-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ems_db}
+      POSTGRES_USER: ${DB_USER:-ems_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme_strong_password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ems_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ems-backend-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ems-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-ems_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-ems_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-changeme_strong_password}
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_key_at_least_32_chars_long_here_replace_me}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-900000}
+      JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-604800000}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ems-backend-network
+
+volumes:
+  pgdata:
+
+networks:
+  ems-backend-network:
+    driver: bridge
