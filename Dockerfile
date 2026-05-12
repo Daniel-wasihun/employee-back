@@ -13,5 +13,6 @@ RUN ./mvnw package -DskipTests -B
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8443
 # Optimize JVM memory for Render (512MB limit)
 ENTRYPOINT ["java", "-Xmx300m", "-Xms300m", "-jar", "app.jar"]

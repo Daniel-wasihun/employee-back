@@ -26,24 +26,17 @@ services:
       dockerfile: Dockerfile
     container_name: ems-backend
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-ems_db}
       SPRING_DATASOURCE_USERNAME: ${DB_USER:-ems_user}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-changeme_strong_password}
       JWT_SECRET: ${JWT_SECRET:-your_super_secret_key_at_least_32_chars_long_here_replace_me}
-      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-900000}
-      JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-604800000}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
-      # Direct SSL Overrides
+      SERVER_PORT: 8443
       SERVER_SSL_ENABLED: "true"
-      SERVER_SSL_KEY_STORE: "/app/keystore.p12"
+      SERVER_SSL_KEY_STORE: "classpath:keystore.p12"
       SERVER_SSL_KEY_STORE_PASSWORD: "changeit"
-      SERVER_SSL_KEY_STORE_TYPE: "PKCS12"
-      SERVER_SSL_KEY_ALIAS: "ems-backend"
-      SERVER_PORT: "8443"
     ports:
       - "8443:8443"
-    volumes:
-      - ./src/main/resources/keystore.p12:/app/keystore.p12:ro
     depends_on:
       postgres:
         condition: service_healthy
