@@ -14,4 +14,4 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 # Optimize JVM memory for Render (512MB limit)
-ENTRYPOINT ["java", "-Xmx400m", "-Xms400m", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx300m", "-Xms300m", "-jar", "app.jar"]
