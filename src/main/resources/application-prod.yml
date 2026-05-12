@@ -1,8 +1,13 @@
 spring:
+  main:
+    lazy-initialization: true
   datasource:
-    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ems_db}}}
+    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ems_db}?sslmode=require}}
     username: ${SPRING_DATASOURCE_USERNAME:${DB_USER:ems_user}}
     password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:changeme_strong_password}}
+    hikari:
+      connection-timeout: 10000
+      maximum-pool-size: 5
 
   jpa:
     hibernate:
