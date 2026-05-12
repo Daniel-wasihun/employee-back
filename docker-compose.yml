@@ -26,15 +26,20 @@ services:
       dockerfile: Dockerfile
     container_name: ems-backend
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-ems_db}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER:-ems_user}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-changeme_strong_password}
-      JWT_SECRET: ${JWT_SECRET:-your_super_secret_key_at_least_32_chars_long_here_replace_me}
-      SERVER_PORT: 8443
-      SERVER_SSL_ENABLED: "true"
-      SERVER_SSL_KEY_STORE: "classpath:keystore.p12"
-      SERVER_SSL_KEY_STORE_PASSWORD: "changeit"
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-ems_db}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-ems_user}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-changeme_strong_password}
+      - JWT_SECRET=${JWT_SECRET:-your_super_secret_key_at_least_32_chars_long_here_replace_me}
+      - SERVER_PORT=8443
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_CERTIFICATE=/etc/ssl/certs/backend-cert.pem
+      - SERVER_SSL_CERTIFICATE_KEY=/etc/ssl/certs/backend-key.pem
+      # Clear legacy keystore variables to ensure PEM is used
+      - SERVER_SSL_KEY_STORE=
+    volumes:
+      - ../frontend/nginx/ssl/cert.pem:/etc/ssl/certs/backend-cert.pem:ro
+      - ../frontend/nginx/ssl/key.pem:/etc/ssl/certs/backend-key.pem:ro
     ports:
       - "8443:8443"
     depends_on:
