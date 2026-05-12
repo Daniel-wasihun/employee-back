@@ -97,8 +97,8 @@ public class DataInitializer implements CommandLineRunner {
 
                 Employee emp2 = Employee.builder()
                         .userId(manager.getId())
-                        .firstName("Sarah")
-                        .lastName("Johnson")
+                        .firstName("Etsubdink")
+                        .lastName("Desalegn")
                         .email("manager@ems.com")
                         .phone("0922334455")
                         .departmentId(hr.getId())
@@ -109,9 +109,9 @@ public class DataInitializer implements CommandLineRunner {
                         .build();
 
                 Employee emp3 = Employee.builder()
-                        .firstName("Michael")
-                        .lastName("Smith")
-                        .email("michael.s@ems.com")
+                        .firstName("Kalab")
+                        .lastName("Mesfin")
+                        .email("kalab.m@ems.com")
                         .phone("0933445566")
                         .departmentId(engineering.getId())
                         .position("Backend Developer")
@@ -121,13 +121,13 @@ public class DataInitializer implements CommandLineRunner {
                         .build();
                 
                 Employee emp4 = Employee.builder()
-                        .firstName("Emma")
-                        .lastName("Davis")
-                        .email("emma.d@ems.com")
+                        .firstName("Esmael")
+                        .lastName("Mohammed")
+                        .email("esmael.m@ems.com")
                         .phone("0944556677")
-                        .departmentId(marketing.getId())
-                        .position("Marketing Specialist")
-                        .salary(new BigDecimal("95000.00"))
+                        .departmentId(engineering.getId())
+                        .position("Fullstack Developer")
+                        .salary(new BigDecimal("115000.00"))
                         .hireDate(LocalDate.of(2023, 8, 5))
                         .status("ACTIVE")
                         .build();
