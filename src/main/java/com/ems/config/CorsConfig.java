@@ -20,7 +20,8 @@ public class CorsConfig {
                 "http://localhost:3000",
                 "https://localhost",
                 "https://localhost:8444",
-                "https://localhost:8443"
+                "https://localhost:8443",
+                "https://employee-front-275b.onrender.com"
         ));
         if (frontendUrl != null && !frontendUrl.isEmpty()) {
             allowedOrigins.add(frontendUrl);
