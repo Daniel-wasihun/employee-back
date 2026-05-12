@@ -32,10 +32,10 @@ server:
   ssl:
     enabled: ${SERVER_SSL_ENABLED:true}
     # Support for both Keystore (legacy) and PEM (modern)
-    key-store: ${SERVER_SSL_KEY_STORE:classpath:keystore.p12}
-    key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD:changeit}
-    key-store-type: ${SERVER_SSL_KEY_STORE_TYPE:PKCS12}
-    key-alias: ${SERVER_SSL_KEY_ALIAS:ems-backend}
+    key-store: ${SERVER_SSL_KEY_STORE:}
+    key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD:}
+    key-store-type: ${SERVER_SSL_KEY_STORE_TYPE:}
+    key-alias: ${SERVER_SSL_KEY_ALIAS:}
     # PEM support (Spring Boot 2.7+)
     certificate: ${SERVER_SSL_CERTIFICATE:}
     certificate-private-key: ${SERVER_SSL_CERTIFICATE_KEY:}

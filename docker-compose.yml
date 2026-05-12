@@ -37,6 +37,9 @@ services:
       - SERVER_SSL_CERTIFICATE_KEY=/etc/ssl/certs/backend-key.pem
       # Clear legacy keystore variables to ensure PEM is used
       - SERVER_SSL_KEY_STORE=
+      - SERVER_SSL_KEY_STORE_PASSWORD=
+      - SERVER_SSL_KEY_STORE_TYPE=
+      - SERVER_SSL_KEY_ALIAS=
     volumes:
       - ../frontend/nginx/ssl/cert.pem:/etc/ssl/certs/backend-cert.pem:ro
       - ../frontend/nginx/ssl/key.pem:/etc/ssl/certs/backend-key.pem:ro
