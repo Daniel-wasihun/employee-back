@@ -3,9 +3,9 @@ spring:
     name: ems-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/ems_db
-    username: ems_user
-    password: changeme_strong_password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/ems_db}
+    username: ${SPRING_DATASOURCE_USERNAME:ems_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:changeme_strong_password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
