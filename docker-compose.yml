@@ -13,12 +13,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ems_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ems_user} -d ${DB_NAME:-ems_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - ems-backend-network
+      - ems-network
 
   backend:
     build:
@@ -33,17 +33,26 @@ services:
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-900000}
       JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-604800000}
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      # Direct SSL Overrides
+      SERVER_SSL_ENABLED: "true"
+      SERVER_SSL_KEY_STORE: "/app/keystore.p12"
+      SERVER_SSL_KEY_STORE_PASSWORD: "changeit"
+      SERVER_SSL_KEY_STORE_TYPE: "PKCS12"
+      SERVER_SSL_KEY_ALIAS: "ems-backend"
+      SERVER_PORT: "8443"
     ports:
       - "8443:8443"
+    volumes:
+      - ./src/main/resources/keystore.p12:/app/keystore.p12:ro
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - ems-backend-network
+      - ems-network
 
 volumes:
   pgdata:
 
 networks:
-  ems-backend-network:
-    driver: bridge
+  ems-network:
+    external: true
