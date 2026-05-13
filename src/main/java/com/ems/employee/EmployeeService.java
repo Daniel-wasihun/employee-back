@@ -6,6 +6,7 @@ import com.ems.employee.dto.EmployeeRequest;
 import com.ems.employee.dto.EmployeeResponse;
 import com.ems.user.Role;
 import com.ems.user.User;
+import com.ems.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
     private final EmployeeMapper employeeMapper;
 
     public PageResponse<EmployeeResponse> getAllEmployees(int page, int size, String sortBy, String direction, String search, User currentUser) {
@@ -68,9 +70,21 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponse createEmployee(EmployeeRequest request) {
-        Employee employee = employeeMapper.toEntity(request);
-        employee = employeeRepository.save(employee);
-        return employeeMapper.toResponse(employee, true);
+        final Employee employee = employeeMapper.toEntity(request);
+        
+        // Link to existing user if email matches
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            employee.setUserId(user.getId());
+            if (request.getRole() != null) {
+                try {
+                    user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+                    userRepository.save(user);
+                } catch (IllegalArgumentException ignored) {}
+            }
+        });
+
+        Employee savedEmployee = employeeRepository.save(employee);
+        return employeeMapper.toResponse(savedEmployee, true);
     }
 
     @Transactional
@@ -79,6 +93,17 @@ public class EmployeeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
 
         employeeMapper.updateEntity(employee, request);
+
+        // Sync role to user if linked
+        if (employee.getUserId() != null && request.getRole() != null) {
+            userRepository.findById(employee.getUserId()).ifPresent(user -> {
+                try {
+                    user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+                    userRepository.save(user);
+                } catch (IllegalArgumentException ignored) {}
+            });
+        }
+
         employee = employeeRepository.save(employee);
 
         boolean isAdmin = currentUser.getRole() == Role.ADMIN;

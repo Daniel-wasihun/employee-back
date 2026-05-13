@@ -27,6 +27,7 @@ public class EmployeeResponse {
     private BigDecimal salary;      // null for non-ADMIN
     private LocalDate hireDate;
     private String status;
+    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

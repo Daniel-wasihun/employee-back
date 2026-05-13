@@ -45,12 +45,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/departments").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Role-based access
+                        .requestMatchers(HttpMethod.GET, "/api/v1/departments/**").hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/api/v1/employees").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/employees/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/departments/**").hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/api/v1/departments").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/departments/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/departments/**").hasRole("ADMIN")

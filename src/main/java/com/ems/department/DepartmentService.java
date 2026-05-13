@@ -3,7 +3,6 @@ package com.ems.department;
 import com.ems.common.exception.ResourceNotFoundException;
 import com.ems.department.dto.DepartmentRequest;
 import com.ems.department.dto.DepartmentResponse;
-import com.ems.employee.Employee;
 import com.ems.employee.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class DepartmentService {
     private final EmployeeRepository employeeRepository;
 
     public List<DepartmentResponse> getAllDepartments() {
-        return departmentRepository.findAll().stream()
+        return departmentRepository.findAllByOrderByNameAsc().stream()
                 .map(this::toResponse)
                 .toList();
     }

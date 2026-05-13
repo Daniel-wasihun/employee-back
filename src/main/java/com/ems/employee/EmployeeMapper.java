@@ -5,22 +5,34 @@ import com.ems.department.DepartmentRepository;
 import com.ems.employee.dto.EmployeeRequest;
 import com.ems.employee.dto.EmployeeResponse;
 import com.ems.employee.dto.EmployeeSummary;
+import com.ems.user.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeeMapper {
 
     private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
 
-    public EmployeeMapper(DepartmentRepository departmentRepository) {
+    public EmployeeMapper(DepartmentRepository departmentRepository, UserRepository userRepository) {
         this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
     }
 
     public EmployeeResponse toResponse(Employee employee, boolean includeSalary) {
         String deptName = null;
-        if (employee.getDepartmentId() != null) {
-            deptName = departmentRepository.findById(employee.getDepartmentId())
+        Long deptId = employee.getDepartmentId();
+        if (deptId != null) {
+            deptName = departmentRepository.findById(deptId)
                     .map(Department::getName)
+                    .orElse(null);
+        }
+
+        String role = null;
+        Long userId = employee.getUserId();
+        if (userId != null) {
+            role = userRepository.findById(userId)
+                    .map(u -> u.getRole().name())
                     .orElse(null);
         }
 
@@ -37,6 +49,7 @@ public class EmployeeMapper {
                 .salary(includeSalary ? employee.getSalary() : null)
                 .hireDate(employee.getHireDate())
                 .status(employee.getStatus())
+                .role(role)
                 .createdAt(employee.getCreatedAt())
                 .updatedAt(employee.getUpdatedAt())
                 .build();
@@ -44,8 +57,9 @@ public class EmployeeMapper {
 
     public EmployeeSummary toSummary(Employee employee) {
         String deptName = null;
-        if (employee.getDepartmentId() != null) {
-            deptName = departmentRepository.findById(employee.getDepartmentId())
+        Long deptId = employee.getDepartmentId();
+        if (deptId != null) {
+            deptName = departmentRepository.findById(deptId)
                     .map(Department::getName)
                     .orElse(null);
         }
