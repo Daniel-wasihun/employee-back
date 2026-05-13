@@ -64,6 +64,7 @@ public class EmployeeMapper {
                     .orElse(null);
         }
 
+        
         return EmployeeSummary.builder()
                 .id(employee.getId())
                 .firstName(employee.getFirstName())
