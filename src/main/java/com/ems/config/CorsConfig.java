@@ -18,9 +18,11 @@ public class CorsConfig {
         List<String> allowedOrigins = new java.util.ArrayList<>(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000",
+                "http://localhost:3001",
                 "https://localhost",
                 "https://localhost:8444",
                 "https://localhost:8443",
+                "https://localhost:3001",
                 "https://employee-front-275b.onrender.com"
         ));
         if (frontendUrl != null && !frontendUrl.isEmpty()) {
